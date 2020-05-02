@@ -1,18 +1,21 @@
 version: '3'
 
-volumes:
-  sync_storage:
-    external: true
+# volumes:
+#   sync_storage:
+#     external: true
 
 services:
   resilio_sync:
-    image: resilio/sync
-    restart: always
+    image: dhjensen/sync:latest
+    restart: unless-stopped
+    #user: 1000:1000
     ports:
      - 127.0.0.1:9999:8888
      - 55555:55555/tcp
-     - 55555:55555/udp     
+     - 55555:55555/udp
     volumes:
-     - sync_storage:/mnt/sync/storage     # Sync storage folder
-     - ./sync.conf:/mnt/sync/sync.conf    # Configuration file
-     - $SYNC_DATA:/mnt/sync/data          # folder with data to be shared
+    #  - sync_storage:/mnt/sync/storage     # Sync storage folder
+    #  - ./sync.conf:/mnt/sync/sync.conf    # Configuration file
+    #  - $SYNC_DATA:/mnt/sync/data          # folder with data to be shared
+      - ./sync.conf:/mnt/sync/sync.conf    # Configuration file
+      - $SYNC_DATA:/mnt/sync

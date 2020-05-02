@@ -1,4 +1,29 @@
-#! /bin/bash
+#!/bin/bash -eu
+
+set +H -xeuo pipefail
+
+: ${RSYNC_UID:=$(stat /mnt/sync -c '%u')}
+: ${RSYNC_GID:=$(stat /mnt/sync -c '%g')}
+
+# Create new group using target GID
+if ! odgroup="$(getent group "$RSYNC_GID")"; then
+  odgroup='run_sync'
+  groupadd "${odgroup}" -g "$RSYNC_GID"
+else
+  odgroup=${odgroup%%:*}
+fi
+
+# Create new user using target UID
+if ! oduser="$(getent passwd "$RSYNC_UID")"; then
+  oduser='run_sync'
+  useradd -m "${oduser}" -u "$RSYNC_UID" -g "$RSYNC_GID"
+else
+  oduser="${oduser%%:*}"
+  usermod -g "${odgroup}" "${oduser}"
+  grep -qv root <( groups "${oduser}" ) || { echo 'ROOT level privileges prohibited!'; exit 1; }
+fi
+
+chown "${oduser}:${odgroup}" /mnt/sync
 
 mkdir -p /mnt/sync/folders
 mkdir -p /mnt/sync/config
@@ -7,4 +32,4 @@ if ! [ -f /mnt/sync/sync.conf ]; then
     cp /etc/sync.conf.default /mnt/sync/sync.conf;
 fi
 
-HOME=/mnt/sync/folders exec /usr/bin/rslsync --nodaemon $*
+HOME=/mnt/sync/folders exec gosu "${oduser}" /usr/bin/rslsync --nodaemon $*
