@@ -3,15 +3,20 @@
 # VERSION               0.1
 #
 
-FROM ubuntu:bionic-20200403 AS unpacker
+FROM ubuntu:bionic AS unpacker
 
-ADD https://download-cdn.resilio.com/2.7.0/linux-x64/resilio-sync_x64.tar.gz /tmp/sync.tgz
+ARG VERSION=2.7.0
+ARG ARCH=x64
+
+ADD https://download-cdn.resilio.com/${VERSION}/linux-${ARCH}/resilio-sync_x64.tar.gz /tmp/sync.tgz
 RUN tar -xf /tmp/sync.tgz -C /usr/bin rslsync && rm -f /tmp/sync.tgz
 
-FROM ubuntu:bionic-20200403
+FROM ubuntu:bionic
+
+ARG VERSION=2.7.0
 
 LABEL MAINTAINER="Resilio Inc. <support@resilio.com>" \
-      com.resilio.version="2.6.4"
+      com.resilio.version="${VERSION}"
 
 RUN apt-get update && \
     apt-get install -y gosu=1.10-1 --no-install-recommends && \

@@ -6,7 +6,7 @@ version: '3'
 
 services:
   resilio_sync:
-    image: dhjensen/sync:latest
+    image: $IMAGE:$TAG
     restart: unless-stopped
     #user: 1000:1000
     ports:
