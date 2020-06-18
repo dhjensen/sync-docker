@@ -5,7 +5,7 @@
 
 FROM ubuntu:bionic AS unpacker
 
-ARG VERSION=2.7.0
+ARG VERSION=2.7.1
 ARG ARCH=x64
 
 ADD https://download-cdn.resilio.com/${VERSION}/linux-${ARCH}/resilio-sync_x64.tar.gz /tmp/sync.tgz
@@ -13,7 +13,7 @@ RUN tar -xf /tmp/sync.tgz -C /usr/bin rslsync && rm -f /tmp/sync.tgz
 
 FROM ubuntu:bionic
 
-ARG VERSION=2.7.0
+ARG VERSION=2.7.1
 
 LABEL MAINTAINER="Resilio Inc. <support@resilio.com>" \
       com.resilio.version="${VERSION}"
