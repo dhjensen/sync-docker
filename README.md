@@ -1,12 +1,12 @@
-## Resilio Sync
+# Resilio Sync
 
 https://www.resilio.com
 
 Sync uses peer-to-peer technology to provide fast, private file sharing for teams and individuals. By skipping the cloud, transfers can be significantly faster because files take the shortest path between devices. Sync does not store your information on servers in the cloud, avoiding cloud privacy concerns.
 
-### Usage
+## Usage
 
-```
+```bash
 DATA_FOLDER=/path/to/data/folder/on/the/host
 WEBUI_PORT=<port to access the webui on the host>
 
@@ -22,8 +22,15 @@ docker run -d --name Sync \
 ```
 
 Note: you can use our official Docker image `resilio/sync` hosted on hub.docker.com or build image locally:
+
+```cli
+docker build -t dhjensen/sync .
 ```
-docker build -t resilio/sync .
+
+To make sure the base image is updated before building add `--pull`
+
+```cli
+docker build --pull -t dhjensen/sync .
 ```
 
 Be sure to always run docker container with `--restart` parameter to allow Docker daemon to handle Sync container (launch at startup as well as restart it in case of failure).
@@ -34,22 +41,22 @@ If you need to run Sync under specific user inside your container - use `--user`
 
 Running Sync in docker container via docker-compose is described [here](https://github.com/bt-sync/sync-docker/tree/master/docker-compose).
 
-### Volume
+## Volume
 
 * `/mnt/sync` - folder inside the container that contains the [storage folder](https://help.resilio.com/hc/en-us/articles/206664690-Sync-Storage-folder), [configuration file](https://help.resilio.com/hc/en-us/articles/206178884) and default download folder
 
-### Ports
+## Ports
 
 * `8888` - Webui port
 * `55555` - Listening port (both TCP and UDP) for Sync traffic (you can change it, but in this case change it in Sync [settings](https://help.resilio.com/hc/en-us/articles/204762669-Sync-Preferences) as well)
 
 Find more info [here](https://help.resilio.com/hc/en-us/articles/204754759-What-ports-and-protocols-are-used-by-Sync-) about ports used by Sync.
 
-#### LAN access
+### LAN access
 
 If you do not want to limit the access to the webui, do not specify localhost address in `-p` parameter:
 
-```
+```cli
 docker run -d --name Sync \
            -p $WEBUI_PORT:8888 \
            -p 55555/tcp \
@@ -63,7 +70,7 @@ docker run -d --name Sync \
 
 If you need to mount extra directories, mount them in `/mnt/mounted_folders`:
 
-```
+```cli
 docker run -d --name Sync \
            -p 127.0.0.1:$WEBUI_PORT:8888 \
            -p 55555/tcp \
@@ -79,7 +86,7 @@ Do not create directories at the root of `/mnt/mounted_folders` from the Sync we
 
 ### Miscellaneous
 
-- Additional info and various guides can be found in our [help center](https://help.resilio.com)
+*-* Additional info and various guides can be found in our [help center](https://help.resilio.com)
 - If you have any questions left, please contact us via [support page](https://help.resilio.com/hc/en-us/requests/new?ticket_form_id=91563) or visit our forum at [https://forum.resilio.com](https://forum.resilio.com)
 - Read our [official blog](https://www.resilio.com/blog/)
 - Docker [hub](https://hub.docker.com/r/resilio/sync/)
