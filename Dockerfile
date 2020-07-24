@@ -3,7 +3,7 @@
 # VERSION               0.1
 #
 
-ARG VERSION=2.7.1
+ARG VERSION=2.7.2
 
 FROM ubuntu:bionic AS unpacker
 
